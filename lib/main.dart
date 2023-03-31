@@ -1,3 +1,6 @@
+// ignore: unused_import
+// ignore_for_file: unused_import, duplicate_ignore, depend_on_referenced_packages
+
 import 'package:a/viewfolder/REGISTERVIEW.dart';
 import 'package:a/viewfolder/login_view.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,10 @@ void main() {
       title: 'sawadee',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const Homepage(),
+      routes: {
+        '/login': (context) => const loginview(),
+        '/register': (context) => const registerview(),
+      },
     ),
   );
 }
@@ -20,33 +27,26 @@ class Homepage extends StatelessWidget {
   const Homepage({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Homescreen'),
-        ),
-        body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-                final user = FirebaseAuth.instance.currentUser;
-
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            /*final user = FirebaseAuth.instance.currentUser;
+                print(user);
                 if (user?.emailVerified ?? false) {
-                  print('you email');
                 } else {
-                  print('not you email');
+                  return const VerifyEmail();
                 }
                 return const Text('Done');
-
-              default:
-                return const Text("loading");
-            }
-          },
-        ),
-      ),
+            */
+            return const loginview();
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
