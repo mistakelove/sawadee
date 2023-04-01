@@ -1,6 +1,7 @@
 // ignore: unused_import
-// ignore_for_file: unused_import, duplicate_ignore, depend_on_referenced_packages, camel_case_types
+// ignore_for_file: unused_import, duplicate_ignore, depend_on_referenced_packages, camel_case_types, equal_keys_in_map
 
+import 'package:a/constant/routes.dart';
 import 'package:a/viewfolder/REGISTERVIEW.dart';
 import 'package:a/viewfolder/login_view.dart';
 import 'package:a/viewfolder/verifyemail.dart';
@@ -19,9 +20,9 @@ void main() {
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const Homepage(),
       routes: {
-        '/login': (context) => const loginview(),
-        '/register': (context) => const registerview(),
-        '/noteview': (context) => const NoteView(),
+        loginRoute: (context) => const loginview(),
+        registerRoute: (context) => const registerview(),
+        verifyRoute: (context) => const NoteView(),
       },
     ),
   );
@@ -83,7 +84,7 @@ class _NoteViewState extends State<NoteView> {
                   if (shouldlogout) {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/login', (route) => false);
+                        .pushNamedAndRemoveUntil(loginRoute, (route) => false);
                   }
                   break;
               }
