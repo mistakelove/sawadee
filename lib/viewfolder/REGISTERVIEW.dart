@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:a/constant/routes.dart';
+import 'package:a/utillity-/showerrordialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,24 +60,53 @@ class _registerviewState extends State<registerview> {
               final email = _email.text;
               final password = _password.text;
               try {
-                final UserCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+                Navigator.of(context).pushNamed(
+                  verifyRoute,
+                );
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'weak-password') {
-                  devtools.log(e.code);
+                  showErrordialog(
+                    context,
+                    'weak-password',
+                  );
                 } else if (e.code == 'email-already-in-use') {
-                  devtools.log('email-already-in-use');
+                  showErrordialog(
+                    context,
+                    'email-already-in-use',
+                  );
                 } else if (e.code == 'Invalid-email') {
-                  devtools.log(e.code);
+                  showErrordialog(
+                    context,
+                    'Invalid-emaild',
+                  );
+                } else {
+                  await showErrordialog(
+                    context,
+                    'eror${e.code}',
+                  );
                 }
+              } catch (e) {
+                e.toString();
+                await showErrordialog(
+                  context,
+                  e.toString(),
+                );
               }
-              final UserCredential = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: email, password: password);
-              devtools.log(UserCredential.toString());
+              final UserCredential =
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: email,
+                password: password,
+              );
             },
-            child: Text('register'),
+            child: Text(
+              'register',
+            ),
           ),
           TextButton(
               onPressed: () {

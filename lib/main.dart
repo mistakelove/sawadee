@@ -21,8 +21,9 @@ void main() {
       home: const Homepage(),
       routes: {
         loginRoute: (context) => const loginview(),
-        registerRoute: (context) => const registerview(),
-        verifyRoute: (context) => const NoteView(),
+        verifyRoute: (context) => const VerifyEmail(),
+        noteRote: (context) => const NoteView(),
+        registerRoute: (context) => registerview(),
       },
     ),
   );

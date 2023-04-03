@@ -64,7 +64,7 @@ class _loginviewState extends State<loginview> {
                     .signInWithEmailAndPassword(
                         email: email, password: password);
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  verifyRoute,
+                  noteRote,
                   (route) => false,
                 );
               } on FirebaseAuthException catch (e) {
@@ -87,9 +87,9 @@ class _loginviewState extends State<loginview> {
               } catch (e) {
                 e.toString();
                 await showErrordialog(
-                    context,
-                    e.toString(),
-                  );
+                  context,
+                  e.toString(),
+                );
               }
             },
             child: Text('login'),
@@ -106,4 +106,3 @@ class _loginviewState extends State<loginview> {
     );
   }
 }
-
