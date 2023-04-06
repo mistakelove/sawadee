@@ -1,11 +1,12 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:a/constant/routes.dart';
+import 'package:a/service/auth/auth_exception.dart';
+import 'package:a/service/auth/auth_service.dart';
 import 'package:a/utillity-/showerrordialog.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import '../firebase_options.dart';
+
 import 'dart:developer' as devtools show log;
 
 class registerview extends StatefulWidget {
@@ -60,53 +61,33 @@ class _registerviewState extends State<registerview> {
               final email = _email.text;
               final password = _password.text;
               try {
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
-                Navigator.of(context).pushNamed(
-                  verifyRoute,
-                );
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'weak-password') {
-                  showErrordialog(
-                    context,
-                    'weak-password',
-                  );
-                } else if (e.code == 'email-already-in-use') {
-                  showErrordialog(
-                    context,
-                    'email-already-in-use',
-                  );
-                } else if (e.code == 'Invalid-email') {
-                  showErrordialog(
-                    context,
-                    'Invalid-emaild',
-                  );
-                } else {
-                  await showErrordialog(
-                    context,
-                    'eror${e.code}',
-                  );
-                }
-              } catch (e) {
-                e.toString();
+                await AuthService.firebase()
+                    .creatUser(email: email, password: password);
+                AuthService.firebase().sendemailverification();
+                Navigator.of(context).pushNamed(verifyRoute);
+              } on WeakPasswordAuthException {
                 await showErrordialog(
                   context,
-                  e.toString(),
+                  'weak-password',
+                ); 
+              } on EmailAlreadyInuseAuthException {
+                await showErrordialog(
+                  context,
+                  'email-already-in-use',
+                );
+              } on InvaildEmailAuthException {
+                await showErrordialog(
+                  context,
+                  'email-already-in-use',
+                );
+              } on genaricAuthException {
+                await showErrordialog(
+                  context,
+                  'Fail to register',
                 );
               }
-              final UserCredential =
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: email,
-                password: password,
-              );
             },
-            child: Text(
-              'register',
-            ),
+            child: Text('register'),
           ),
           TextButton(
               onPressed: () {
